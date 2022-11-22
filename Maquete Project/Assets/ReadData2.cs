@@ -38,7 +38,8 @@ public class ReadData2 : MonoBehaviour
     //float[] PollutionDataExtra_Aveiro = new float[3 * 229443 + 1];
     //GameObject[] PollutionGO_Spheres_Aveiro = new GameObject[2 * 229443];
     //GameObject[] PollutionGO_Planes_Aveiro = new GameObject[2 * 3 * 3 * 229443];
-    string fileToRead1 = "Assets/PollutionData/ConstituicaoB_NOx_9_test.dat";
+    //string fileToRead1 = "Assets/PollutionData/ConstituicaoB_NOx_9_test.dat";
+    string fileToRead1 = "Assets/PollutionData/ConstituicaoB_NOx_9.dat";
 
     // Function to count the max number of lines of the file
     int TotalLines(string filePath)
@@ -79,9 +80,19 @@ public class ReadData2 : MonoBehaviour
 
         int countDataIndex = 0;
 
+        int resoltuionArrows = 2;
+
+        int countResolution = 0;
+
         // Loop to analyse each line of the file
         while ((line = reader.ReadLine()) != null)
         {
+            if (countResolution == resoltuionArrows)
+            {
+                countResolution = 0;
+                continue;
+            }
+
             string[] words = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (! System.Char.IsDigit(words[0][0]) || words.Length < 5 )
@@ -112,6 +123,7 @@ public class ReadData2 : MonoBehaviour
             arrows_ObjectsArray[countDataIndex].SetActive(true);
 
             countDataIndex++;
+            countResolution++;
 
         }
     }
