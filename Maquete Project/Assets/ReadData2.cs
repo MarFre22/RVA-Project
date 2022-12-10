@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 using System.Globalization;
 using Unity.VisualScripting;
 using Vuforia;
+//using UnityEditor.VersionControl;
 //using AndroidSettings;
 
 public class ReadData2 : MonoBehaviour  
@@ -47,8 +48,12 @@ public class ReadData2 : MonoBehaviour
     //float[] PollutionDataExtra_Aveiro = new float[3 * 229443 + 1];
     //GameObject[] PollutionGO_Spheres_Aveiro = new GameObject[2 * 229443];
     //GameObject[] PollutionGO_Planes_Aveiro = new GameObject[2 * 3 * 3 * 229443];
-    //string fileToRead1 = "Assets/PollutionData/ConstituicaoB_NOx_9_test.dat";
-    string fileToRead1 = "Assets/DataEscoamento/NCM2/02.dat";
+
+    //string fileToRead1 = "Assets/DataEscoamento/NCM2/02.dat";
+    string fileToRead1;
+
+
+
 
     // Function to count the max number of lines of the file
     int TotalLines(string filePath)
@@ -81,6 +86,18 @@ public class ReadData2 : MonoBehaviour
         string line, str;
         int k, l;
         float j;
+
+        
+
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            fileToRead1 = Path.Combine(Application.dataPath, "Assets", "DataEscoamento", "NCM2", "02.dat");
+        }
+        else if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            fileToRead1 = Path.Combine(Application.dataPath, "DataEscoamento", "NCM2", "02.dat");
+        }
+
 
 
         // AR Camera Object
