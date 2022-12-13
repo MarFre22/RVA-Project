@@ -22,8 +22,21 @@ public class ReadData2 : MonoBehaviour
     float scale_xData = 1f, scale_yData = 1f, scale_velData = 1f;
 
     // Arrows
+    //      Object - Green
+    public GameObject arrow_green;
+    //      Object - Yellow
+    public GameObject arrow_yellow;
+    //      Object - Red
+    public GameObject arrow_red;
     //      Height of Arrows Objects
     float height_YArrows = 0f;
+    //      Classification - Green
+    float arrow_class_green = 0f;
+    //      Classification - Red
+    float arrow_class_red = 0f;
+
+
+
     //      Dimention
     float dim_Arrows = 1.5f;
 
@@ -86,6 +99,8 @@ public class ReadData2 : MonoBehaviour
         string line, str;
         int k, l;
         float j;
+
+
 
         
 
@@ -156,19 +171,33 @@ public class ReadData2 : MonoBehaviour
             // Save each parameter of the file to the arrays
             x_DataArray[countDataIndex] = offset_xData + scale_xData * float.Parse(words[0], CultureInfo.InvariantCulture.NumberFormat);
             y_DataArray[countDataIndex] = offset_yData + scale_yData *  float.Parse(words[1], CultureInfo.InvariantCulture.NumberFormat);
-            vel_DataArray[countDataIndex] = scale_velData * float.Parse(words[2], CultureInfo.InvariantCulture.NumberFormat);
+            vel_DataArray[countDataIndex] = float.Parse(words[2], CultureInfo.InvariantCulture.NumberFormat);
             dir_DataArray[countDataIndex] = float.Parse(words[3], CultureInfo.InvariantCulture.NumberFormat);
 
             string log = "x: " + words[0] + " y: " + words[1] + " vel: " + words[2] + " dir: " + words[3];
             //string log = "y: " + y_DataArray[countDataIndex];
             Debug.Log(log);
 
-            // Create and edit arrows
-            arrows_ObjectsArray[countDataIndex] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+            // Import object with classification
+            if (vel_DataArray[countDataIndex] >= arrow_class_red) 
+            {
+                arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_red);
+            }
+            else if (vel_DataArray[countDataIndex] < arrow_class_red && vel_DataArray[countDataIndex] > arrow_class_green) 
+            {
+                arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_yellow);
+            }
+            else
+            {
+                arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_green);
+            }
+
             //arrows_ObjectsArray[countDataIndex] = arrow_object
             arrows_ObjectsArray[countDataIndex].name = "Arrow_" + countDataIndex.ToString();
-            renderer = arrows_ObjectsArray[countDataIndex].GetComponent<Renderer>();
-            renderer.material.color = Color.green;
+            //renderer = arrows_ObjectsArray[countDataIndex].GetComponent<Renderer>();
+            
+            //renderer.material.color = Color.green;
             arrows_ObjectsArray[countDataIndex].transform.localScale = new Vector3(dim_Arrows, dim_Arrows, dim_Arrows);
             arrows_ObjectsArray[countDataIndex].transform.position = new Vector3(x_DataArray[countDataIndex], height_YArrows , y_DataArray[countDataIndex]  );
 
