@@ -8,8 +8,20 @@ using UnityEngine.UIElements;
 using System.Globalization;
 using Unity.VisualScripting;
 using Vuforia;
+using UnityEditor;
 //using UnityEditor.VersionControl;
 //using AndroidSettings;
+
+
+struct DataImported
+{
+    public float[] x_DataArray;
+    public float[] y_DataArray;
+    public float[] vel_DataArray;
+    public float[] dir_DataArray;
+    public GameObject[] arrows_ObjectsArray;
+};
+
 
 public class ReadData2 : MonoBehaviour  
 {
@@ -17,9 +29,7 @@ public class ReadData2 : MonoBehaviour
     // Arrays to save the imported file values
     float[] x_DataArray, y_DataArray, vel_DataArray, dir_DataArray;
 
-    // Values modifiers
-    float offset_xData = 0f, offset_yData = 0f;
-    float scale_xData = 1f, scale_yData = 1f, scale_velData = 1f;
+    
 
     // Arrows
     //      Object - Green
@@ -28,17 +38,14 @@ public class ReadData2 : MonoBehaviour
     public GameObject arrow_yellow;
     //      Object - Red
     public GameObject arrow_red;
-    //      Height of Arrows Objects
-    float height_YArrows = 0f;
-    //      Classification - Green
-    float arrow_class_green = 0f;
-    //      Classification - Red
-    float arrow_class_red = 0f;
+    //      Object - Red
+    public GameObject arrow_pink;
+    
 
 
 
     //      Dimention
-    float dim_Arrows = 1.5f;
+    float dim_Arrows = 0.25f;
 
     // Initialize Objects
     GameObject scripted_objects_object, ar_target_object, light_object, arrow_object;
@@ -53,16 +60,6 @@ public class ReadData2 : MonoBehaviour
 
     private Vector3 scaleChange, positionChange;
 
-
-
-
-    //GameObject[] PollutionGO_Planes = new GameObject[2 * 3 * 3 * 63003];
-    //float[] PollutionData_Aveiro = new float[3 * 229443 + 1];
-    //float[] PollutionDataExtra_Aveiro = new float[3 * 229443 + 1];
-    //GameObject[] PollutionGO_Spheres_Aveiro = new GameObject[2 * 229443];
-    //GameObject[] PollutionGO_Planes_Aveiro = new GameObject[2 * 3 * 3 * 229443];
-
-    //string fileToRead1 = "Assets/DataEscoamento/NCM2/02.dat";
     string fileToRead1;
 
 
@@ -96,14 +93,24 @@ public class ReadData2 : MonoBehaviour
       
         StreamReader reader;
         Renderer renderer;
-        string line, str;
-        int k, l;
+        string line;
         float j;
 
+        //      Height of Arrows Objects
+        float height_YArrows = 0f;
+        //      Classification - Green
+        float arrow_class_green = 2f;
+        //      Classification - Red
+        float arrow_class_red = 4f;
+
+        // Values modifiers
+        float offset_xData = 0f, offset_yData = 0f;
+        float scale_xData = 0.5f, scale_yData = 0.5f, scale_velData = 1f;
 
 
-        
 
+
+        // Path Imported File
         if (Application.platform == RuntimePlatform.Android)
         {
             fileToRead1 = Path.Combine(Application.dataPath, "Assets", "DataEscoamento", "NCM2", "02.dat");
@@ -135,31 +142,30 @@ public class ReadData2 : MonoBehaviour
 
         // Count lines of the file
         int fileLenght = TotalLines(fileToRead1);
-        
+
+
+        DataImported DataImp;
+
         // Initializate Arrays with max lenght
-        x_DataArray = new float[fileLenght];
-        y_DataArray = new float[fileLenght];
-        vel_DataArray = new float[fileLenght];
-        dir_DataArray = new float[fileLenght];
-        arrows_ObjectsArray = new GameObject[fileLenght];
+        DataImp.x_DataArray = new float[fileLenght];
+        DataImp.y_DataArray = new float[fileLenght];
+        DataImp.vel_DataArray = new float[fileLenght];
+        DataImp.dir_DataArray = new float[fileLenght];
+        DataImp.arrows_ObjectsArray = new GameObject[fileLenght];
 
 
         reader = new StreamReader(fileToRead1);
 
         int countDataIndex = 0;
 
-        int resoltuionArrows = 2;
+        int resoltuionArrows = 300;
 
         int countResolution = 0;
 
         // Loop to analyse each line of the file
         while ((line = reader.ReadLine()) != null)
         {
-            if (countResolution == resoltuionArrows)
-            {
-                countResolution = 0;
-                continue;
-            }
+            
 
             string[] words = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -168,43 +174,61 @@ public class ReadData2 : MonoBehaviour
                 continue;
             }
 
-            // Save each parameter of the file to the arrays
-            x_DataArray[countDataIndex] = offset_xData + scale_xData * float.Parse(words[0], CultureInfo.InvariantCulture.NumberFormat);
-            y_DataArray[countDataIndex] = offset_yData + scale_yData *  float.Parse(words[1], CultureInfo.InvariantCulture.NumberFormat);
-            vel_DataArray[countDataIndex] = float.Parse(words[2], CultureInfo.InvariantCulture.NumberFormat);
-            dir_DataArray[countDataIndex] = float.Parse(words[3], CultureInfo.InvariantCulture.NumberFormat);
-
-            string log = "x: " + words[0] + " y: " + words[1] + " vel: " + words[2] + " dir: " + words[3];
-            //string log = "y: " + y_DataArray[countDataIndex];
-            Debug.Log(log);
-
-
-            // Import object with classification
-            if (vel_DataArray[countDataIndex] >= arrow_class_red) 
+            if ((float.Parse(words[0], CultureInfo.InvariantCulture.NumberFormat) != 2f && float.Parse(words[1], CultureInfo.InvariantCulture.NumberFormat) != 2f) && countResolution == resoltuionArrows)
             {
-                arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_red);
+                countResolution = 0;
+                continue;
             }
-            else if (vel_DataArray[countDataIndex] < arrow_class_red && vel_DataArray[countDataIndex] > arrow_class_green) 
+
+            // Save each parameter of the file to the arrays
+            DataImp.x_DataArray[countDataIndex] = offset_xData + scale_xData * float.Parse(words[0], CultureInfo.InvariantCulture.NumberFormat);
+            DataImp.y_DataArray[countDataIndex] = offset_yData + scale_yData *  float.Parse(words[1], CultureInfo.InvariantCulture.NumberFormat);
+            DataImp.vel_DataArray[countDataIndex] = float.Parse(words[2], CultureInfo.InvariantCulture.NumberFormat);
+            DataImp.dir_DataArray[countDataIndex] = float.Parse(words[3], CultureInfo.InvariantCulture.NumberFormat);
+
+            //string log = "x: " + words[0] + " y: " + words[1] + " vel: " + words[2] + " dir: " + words[3];
+            //string log = "y: " + y_DataArray[countDataIndex];
+            //Debug.Log(log);
+
+            if (float.Parse(words[0], CultureInfo.InvariantCulture.NumberFormat) == 2f && float.Parse(words[1], CultureInfo.InvariantCulture.NumberFormat) == 2f)
             {
-                arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_yellow);
+                DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_pink);
+
+                string log = "o ponto [0,0] Existe!!!";
+                Debug.Log(log);
             }
             else
             {
-                arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_green);
+                // Import object with classification
+                if (DataImp.vel_DataArray[countDataIndex] >= arrow_class_red)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_red);
+                }
+                else if (DataImp.vel_DataArray[countDataIndex] < arrow_class_red && DataImp.vel_DataArray[countDataIndex] > arrow_class_green)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_yellow);
+                }
+                else
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_green);
+                }
             }
 
-            //arrows_ObjectsArray[countDataIndex] = arrow_object
-            arrows_ObjectsArray[countDataIndex].name = "Arrow_" + countDataIndex.ToString();
-            //renderer = arrows_ObjectsArray[countDataIndex].GetComponent<Renderer>();
+
             
+
+            //arrows_ObjectsArray[countDataIndex] = arrow_object
+            DataImp.arrows_ObjectsArray[countDataIndex].name = "Arrow_" + countDataIndex.ToString();
+            //renderer = arrows_ObjectsArray[countDataIndex].GetComponent<Renderer>();
+
             //renderer.material.color = Color.green;
-            arrows_ObjectsArray[countDataIndex].transform.localScale = new Vector3(dim_Arrows, dim_Arrows, dim_Arrows);
-            arrows_ObjectsArray[countDataIndex].transform.position = new Vector3(x_DataArray[countDataIndex], height_YArrows , y_DataArray[countDataIndex]  );
+            DataImp.arrows_ObjectsArray[countDataIndex].transform.localScale = new Vector3(dim_Arrows, dim_Arrows, dim_Arrows);
+            DataImp.arrows_ObjectsArray[countDataIndex].transform.position = new Vector3(DataImp.x_DataArray[countDataIndex], height_YArrows , DataImp.y_DataArray[countDataIndex]  );
 
 
 
 
-            arrows_ObjectsArray[countDataIndex].transform.SetParent(scripted_objects_object.transform, true);
+            DataImp.arrows_ObjectsArray[countDataIndex].transform.SetParent(scripted_objects_object.transform, true);
 
             //arrows_ObjectsArray[countDataIndex].transform.parent = scripted_objects_object.transform;
 
