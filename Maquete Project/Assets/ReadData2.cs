@@ -113,11 +113,11 @@ public class ReadData2 : MonoBehaviour
         // Path Imported File
         if (Application.platform == RuntimePlatform.Android)
         {
-            fileToRead1 = Path.Combine(Application.dataPath, "Assets", "DataEscoamento", "NCM2", "02.dat");
+            fileToRead1 = Path.Combine(Application.dataPath, "Assets", "DataEscoamento", "NCM2-Edit", "02.dat");
         }
         else if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
-            fileToRead1 = Path.Combine(Application.dataPath, "DataEscoamento", "NCM2", "02.dat");
+            fileToRead1 = Path.Combine(Application.dataPath, "DataEscoamento", "NCM2-Edit", "02.dat");
         }
 
 
