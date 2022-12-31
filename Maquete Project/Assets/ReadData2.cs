@@ -113,11 +113,11 @@ public class ReadData2 : MonoBehaviour
         // Path Imported File
         if (Application.platform == RuntimePlatform.Android)
         {
-            fileToRead1 = Path.Combine(Application.dataPath, "Assets", "DataEscoamento", "NCM2-Edit", "02.dat");
+            fileToRead1 = Path.Combine(Application.dataPath, "Assets", "DataEscoamento", "NCM2-Edit", "02edit.dat");
         }
         else if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
-            fileToRead1 = Path.Combine(Application.dataPath, "DataEscoamento", "NCM2-Edit", "02.dat");
+            fileToRead1 = Path.Combine(Application.dataPath, "DataEscoamento", "NCM2-Edit", "02edit.dat");
         }
 
 
@@ -243,7 +243,8 @@ public class ReadData2 : MonoBehaviour
         //scripted_objects_object.transform.parent = ar_target_object.transform;
 
         scripted_objects_object.SetActive(false);
-        scripted_objects_object.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        scripted_objects_object.transform.localScale = new Vector3(0.018f, 0.05f, 0.03f);
+        scripted_objects_object.transform.localPosition = new Vector3(0.4f, 0.05f, -0.4f);
 
         //foreach (Transform child in scripted_objects_object.transform)
         //    child.gameObject.SetActive(false);
