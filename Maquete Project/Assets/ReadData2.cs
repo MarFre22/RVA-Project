@@ -29,15 +29,19 @@ public class ReadData2 : MonoBehaviour
     // Arrays to save the imported file values
     float[] x_DataArray, y_DataArray, vel_DataArray, dir_DataArray;
 
-    
 
-    // Arrows
-    //      Object - Green
-    public GameObject arrow_green;
-    //      Object - Yellow
-    public GameObject arrow_yellow;
-    //      Object - Red
-    public GameObject arrow_red;
+    // Arrows - Objects
+    public GameObject arrow_0;
+    public GameObject arrow_1;
+    public GameObject arrow_2;
+    public GameObject arrow_3;
+    public GameObject arrow_4;
+    public GameObject arrow_5;
+    public GameObject arrow_6;
+    public GameObject arrow_7;
+    public GameObject arrow_8;
+    public GameObject arrow_9;
+    
     //      Object - Red
     public GameObject arrow_pink;
     
@@ -45,7 +49,7 @@ public class ReadData2 : MonoBehaviour
 
 
     //      Dimention
-    float dim_Arrows = 0.25f;
+    float dim_Arrows = 0.15f;
 
     // Initialize Objects
     GameObject scripted_objects_object, ar_target_object, light_object, arrow_object;
@@ -62,22 +66,38 @@ public class ReadData2 : MonoBehaviour
 
     string fileToRead1;
 
+    
 
 
 
+    /*
     // Function to count the max number of lines of the file
-    int TotalLines(string filePath)
+    int TotalLines(string[] textDataArray)
     {
-        using (StreamReader r = new StreamReader(filePath))
+        int valret = 0;
+        
+        if (type == 0)
         {
-            int i = 0;
-            while (r.ReadLine() != null) 
-            { 
-                i++; 
+            using (StreamReader r = new StreamReader(filePath))
+            {
+                int i = 0;
+                while (r.ReadLine() != null)
+                {
+                    i++;
+                }
+                valret = i;
+                //return i;
             }
-            return i;
         }
+        else if (type == 1)
+        {
+            valret = textDataArray.Length;
+        }
+
+        return valret;
+        
     }
+    */
 
     void OnGUI()
     {
@@ -93,33 +113,67 @@ public class ReadData2 : MonoBehaviour
       
         StreamReader reader;
         Renderer renderer;
-        string line;
+        //string line;
         float j;
 
         //      Height of Arrows Objects
         float height_YArrows = 0f;
-        //      Classification - Green
-        float arrow_class_green = 2f;
-        //      Classification - Red
-        float arrow_class_red = 4f;
+
+        //      Arrows - Classification
+        float arrow_class_0 = 0.3f;
+        float arrow_class_1 = 1.5f;
+        float arrow_class_2 = 3.3f;
+        float arrow_class_3 = 5.4f;
+        float arrow_class_4 = 7.9f;
+        float arrow_class_5 = 10.7f;
+        float arrow_class_6 = 13.8f;
+        float arrow_class_7 = 17.1f;
+        float arrow_class_8 = 20.7f;
+        float arrow_class_9 = 24.4f;
+
+        
 
         // Values modifiers
         float offset_xData = 0f, offset_yData = 0f;
         float scale_xData = 0.5f, scale_yData = 0.5f, scale_velData = 1f;
 
+        //string[] textData = null;
 
-
+        //int Android = 0;
 
         // Path Imported File
+        //TextAsset textFile = Resources.Load<TextAsset>(Path.Combine("NCM2-Edit", "02edit.dat"));
+        //string path = Path.Combine("ncme2", "02edit");
+        TextAsset textFile = Resources.Load("ncme2/02edit") as TextAsset;
+        //string texto = textFile.text;
+        string[] textData = textFile.text.Split('\n');
+        /*
         if (Application.platform == RuntimePlatform.Android)
         {
-            fileToRead1 = Path.Combine(Application.dataPath, "Assets", "DataEscoamento", "NCM2-Edit", "02edit.dat");
-        }
-        else if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            fileToRead1 = Path.Combine(Application.dataPath, "DataEscoamento", "NCM2-Edit", "02edit.dat");
-        }
+            Android = 1;
+            //fileToRead1 = Path.Combine(Application.streamingAssetsPath, "StreamingAssets", "DataEscoamento", "NCM2-Edit", "02edit.dat");
 
+
+            fileToRead1 = null;
+
+            TextAsset textFile = Resources.Load<TextAsset>(Path.Combine("NCM2-Edit", "02edit.dat"));
+
+
+            textData = textFile.text.Split(new char[] { '\n' });
+
+            //UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(fileToRead1);
+
+            //www.SendWebRequest();
+            //while (!www.isDone)
+            //{
+            //}
+
+        }
+        else if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
+        {
+            fileToRead1 = Path.Combine(Application.streamingAssetsPath, "DataEscoamento", "NCM2-Edit", "02edit.dat");
+        }
+        */
 
 
         // AR Camera Object
@@ -141,7 +195,8 @@ public class ReadData2 : MonoBehaviour
 
 
         // Count lines of the file
-        int fileLenght = TotalLines(fileToRead1);
+        //int fileLenght = TotalLines(Android, fileToRead1, textData);
+        int fileLenght = textData.Length;
 
 
         DataImported DataImp;
@@ -154,7 +209,7 @@ public class ReadData2 : MonoBehaviour
         DataImp.arrows_ObjectsArray = new GameObject[fileLenght];
 
 
-        reader = new StreamReader(fileToRead1);
+        //reader = new StreamReader(fileToRead1);
 
         int countDataIndex = 0;
 
@@ -163,10 +218,10 @@ public class ReadData2 : MonoBehaviour
         int countResolution = 0;
 
         // Loop to analyse each line of the file
-        while ((line = reader.ReadLine()) != null)
+        //while ((line = reader.ReadLine()) != null)
+        foreach (string line in textData)
         {
-            
-
+          
             string[] words = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (! System.Char.IsDigit(words[0][0]) || words.Length < 4 )
@@ -200,18 +255,52 @@ public class ReadData2 : MonoBehaviour
             else
             {
                 // Import object with classification
-                if (DataImp.vel_DataArray[countDataIndex] >= arrow_class_red)
+                if (DataImp.vel_DataArray[countDataIndex] < arrow_class_0)
                 {
-                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_red);
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_0);
                 }
-                else if (DataImp.vel_DataArray[countDataIndex] < arrow_class_red && DataImp.vel_DataArray[countDataIndex] > arrow_class_green)
+                else if (DataImp.vel_DataArray[countDataIndex] <= arrow_class_1 && DataImp.vel_DataArray[countDataIndex] >= arrow_class_0)
                 {
-                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_yellow);
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_1);
+                }
+                else if (DataImp.vel_DataArray[countDataIndex] <= arrow_class_2 && DataImp.vel_DataArray[countDataIndex] > arrow_class_1)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_2);
+                }
+                else if (DataImp.vel_DataArray[countDataIndex] <= arrow_class_3 && DataImp.vel_DataArray[countDataIndex] > arrow_class_2)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_3);
+                }
+                else if (DataImp.vel_DataArray[countDataIndex] <= arrow_class_4 && DataImp.vel_DataArray[countDataIndex] > arrow_class_3)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_4);
+                }
+                else if (DataImp.vel_DataArray[countDataIndex] <= arrow_class_5 && DataImp.vel_DataArray[countDataIndex] > arrow_class_4)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_5);
+                }
+                else if (DataImp.vel_DataArray[countDataIndex] <= arrow_class_6 && DataImp.vel_DataArray[countDataIndex] > arrow_class_5)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_6);
+                }
+                else if (DataImp.vel_DataArray[countDataIndex] <= arrow_class_7 && DataImp.vel_DataArray[countDataIndex] > arrow_class_6)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_7);
+                }
+                else if (DataImp.vel_DataArray[countDataIndex] <= arrow_class_8 && DataImp.vel_DataArray[countDataIndex] > arrow_class_7)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_8);
+                }
+                else if (DataImp.vel_DataArray[countDataIndex] <= arrow_class_9 && DataImp.vel_DataArray[countDataIndex] > arrow_class_8)
+                {
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_9);
                 }
                 else
                 {
-                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_green);
+                    DataImp.arrows_ObjectsArray[countDataIndex] = GameObject.Instantiate(arrow_9);
                 }
+
+                GL.Flush();
             }
 
 

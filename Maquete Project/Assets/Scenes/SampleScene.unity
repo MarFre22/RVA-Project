@@ -859,6 +859,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a612185a76693443aa8e7482ed5a53a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrow_0: {fileID: 242613509550998500, guid: bd146629e1d18d04e9fef0da8147fde5, type: 3}
+  arrow_1: {fileID: 2218397317114239505, guid: 3e2924bb24f0a0e4eaeb7dfc2c7f3b1b, type: 3}
+  arrow_2: {fileID: 219780079554337219, guid: 48f55fe049e238740ba24200edc4d6eb, type: 3}
+  arrow_3: {fileID: 9185822773961389446, guid: 817dfcd7170c07c49903e6e71d808bf3, type: 3}
+  arrow_4: {fileID: 4694777629859980336, guid: 3b8d2276cf0ee5e4f86db19be2beaa52, type: 3}
+  arrow_5: {fileID: 7801902499444557051, guid: c5c13885833f06c458ca30bbdec5413a, type: 3}
+  arrow_6: {fileID: 7902985553861944768, guid: 4c065d73721b60d4080eee84b9d74073, type: 3}
+  arrow_7: {fileID: 2152341092697919400, guid: ca24efdaa1fd53f479b1d0de4d77d631, type: 3}
+  arrow_8: {fileID: 1271175312281377182, guid: 504af4893b2379e46a681e730111c1fa, type: 3}
+  arrow_9: {fileID: 4265302301557060646, guid: 27736fc1102588548bae6aaf20a4f4e2, type: 3}
   arrow_green: {fileID: 193326574564309948, guid: 049ff5a3af7a3a446a6655165ff5f7cf, type: 3}
   arrow_yellow: {fileID: 7913755308183411462, guid: b818cbe00552c7740b24c85b9225c8ff, type: 3}
   arrow_red: {fileID: 2123531761590058767, guid: 9e8ed3eac5a8fa842aacb99c4dec251b, type: 3}
