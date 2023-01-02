@@ -9,6 +9,8 @@ TagManager:
   - Light
   - ScriptedObjects
   - ArrowObj
+  - ScriptedObjects2
+  - ScriptedObjects3
   layers:
   - Default
   - TransparentFX
